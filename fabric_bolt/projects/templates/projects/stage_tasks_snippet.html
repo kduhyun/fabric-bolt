@@ -1,26 +1,17 @@
 <div class="list-group">
-    {% for task in frequent_tasks_run %}
-        <a href="{% url 'projects_deployment_create' project.pk object.pk %}?task={{ task.name }}" class="list-group-item">
-            <span class="badge">{{ task.times_used }}</span>
-            {{ task.name }}
-            {% if task.description %}
-                <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-delay="{'show': 300, 'hide': 0 }"
-                data-original-title="{{ task.description }}"></i>
-            {% endif %}
+    {% for task_name in all_tasks %}
+        {% if task_name|lower == object.name|lower %}
+        <a href="{% url 'projects_deployment_create' project.pk object.pk task_name %}" class="list-group-item">
+            Click here! run <b>{{ task_name }}</b>
         </a>
-    {% empty %}
+        {% endif %}
+    {% endfor %}
+
+    {% if object.name|lower not in all_tasks|lower %}
         <div class="list-group-item">
             <span class="badge">0</span>
-            No frequent tasks yet
+            No task yet.<br/> Go to https://github.com/kduhyun/fabric-bolt-fabfile ,<br/> open fabfile.py, <br/>and add a task like this stage name.
         </div>
-    {% endfor %}
-</div>
+    {% endif %}
 
-<div>
-    <select class="form-control" id="all_tasks_dropdown">
-        <option value="">All Tasks</option>
-        {% for task_name in all_tasks %}
-            <option value="{% url 'projects_deployment_create' project.pk object.pk %}?task={{ task_name }}">{{ task_name }}</option>
-        {% endfor %}
-    </select>
 </div>
